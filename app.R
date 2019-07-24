@@ -30,29 +30,29 @@ ui <- fluidPage(
                          label = "Escolha o Estado",
                          choices = list("ACRE",
                                         "ALAGOAS",
-                                        "AMAPA" <- "AMAPÁ",
+                                        "AMAPÁ" = "AMAPA",
                                         "AMAZONAS",
                                         "BAHIA",
-                                        "CEARA"  <- "CEARÁ",
+                                        "CEARÁ" = "CEARA" ,
                                         "DISTRITO FEDERAL",
-                                        "ESPIRITO SANTO" <- "ESPÍRITO SANTO",
-                                        "GOIAS" <- "GOIÁS",
-                                        "MARANHAO" <- "MARANHÃO",
+                                        "ESPÍRITO SANTO" = "ESPIRITO SANTO",
+                                        "GOIÁS" = "GOIAS",
+                                        "MARANHÃO" = "MARANHAO",
                                         "MATO GROSSO",
                                         "MATO GROSSO DO SUL",
                                         "MINAS GERAIS",
-                                        "PARA" <- "PARÁ",
-                                        "PARAIBA" <- "PARAÍBA",
-                                          "PARANA" <- "PARANÁ",
+                                        "PARÁ" = "PARA",
+                                        "PARAÍBA" = "PARAIBA",
+                                        "PARANÁ" = "PARANA",
                                         "PERNAMBUCO",
-                                        "PIAUI" <- "PIAUÍ",
+                                        "PIAUÍ" = "PIAUI",
                                         "RIO DE JANEIRO",
                                         "RIO GRANDE DO NORTE", 
                                         "RIO GRANDE DO SUL",
-                                        "RONDONIA" <- "RONDÔNIA",
-                                        "RORAIMA" <- "RORÂIMA",
+                                        "RONDÔNIA" = "RONDONIA",
+                                        "RORÂIMA" = "RORAIMA",
                                         "SANTA CATARINA",
-                                        "SAO PAULO" <- "SÃO PAULO",
+                                        "SÃO PAULO" = "SAO PAULO",
                                         "SERGIPE",
                                         "TOCANTINS"
                          ),
@@ -77,7 +77,11 @@ server <- function(input, output) {
     
     d <- aggregate(d$PREÇO.MÉDIO.REVENDA, by=list(MÊS = d$MÊS), mean)
     
-    g <- ggplot(d, aes(x=MÊS, y=x)) + geom_line() + geom_point()
+    g <- ggplot(d, aes(x=MÊS, y=x)) +
+          geom_line() +
+          scale_x_continuous("MÊS", labels = as.character(d$MÊS), breaks = d$MÊS) + 
+          geom_point() + 
+          ylim(c(2, 5.6))
     
     plot(g)
     })
