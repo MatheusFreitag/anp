@@ -1,16 +1,12 @@
 # Load packages ----
 library(shiny)
 library(ggplot2)
+library(plotly)
 
 # User interface ----
 ui <- fluidPage(
-  titlePanel("title panel"),
-    
-  sidebarLayout(
-           sidebarPanel("sidebar panel"),
-           
-    mainPanel(
-             selectInput("userInput_ano",
+
+            selectInput("userInput_ano",
                          label = "Escolha o ano",
                          choices = list("2019", 
                                         "2018",
@@ -58,18 +54,29 @@ ui <- fluidPage(
                          ),
                          selected = "ACRE"
              ),
-             plotOutput('plot')
+              plotlyOutput('plot')
       )
-  )
-)
+
 
 # Server logic
 
 server <- function(input, output) {
   df <- read.csv('data/2004-2019.tsv', sep='\t')
+  meses_code <- c('Janeiro' = 1, 
+                  'Fevereiro' = 2, 
+                  'Março' = 3, 
+                  'Abril' = 4, 
+                  'Maio' = 5, 
+                  'Junho' = 6, 
+                  'Julho' = 7, 
+                  'Agosto' = 8, 
+                  'Setembro' = 9, 
+                  'Outubro' = 10, 
+                  'Novembro' = 11, 
+                  'Dezembro' = 12)
   
   
-  output$plot <- renderPlot({
+  output$plot <- renderPlotly({
     
     d <- df[df$ANO == input$userInput_ano & 
               df$PRODUTO == input$userInput_produto &
@@ -79,11 +86,17 @@ server <- function(input, output) {
     
     g <- ggplot(d, aes(x=MÊS, y=x)) +
           geom_line() +
-          scale_x_continuous("MÊS", labels = as.character(d$MÊS), breaks = d$MÊS) + 
-          geom_point() + 
-          ylim(c(2, 5.6))
+          scale_x_continuous(paste("Meses observados de ", input$userInput_ano), 
+                             labels = names(meses_code)[match(d$MÊS, meses_code)], 
+                             breaks = d$MÊS) + 
+          ylim(c(2, 5.6)) + 
+          labs(title="Histórico de Preços", y="Preço (em valores absolutos)") + 
+          geom_point(aes(text=sprintf("Preço: R$%.3f<br>Mês: %s", d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
+          
+
+    gg <- ggplotly(g, tooltip="text")
     
-    plot(g)
+    (gg)
     })
   
 }
