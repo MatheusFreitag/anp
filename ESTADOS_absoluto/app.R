@@ -6,6 +6,9 @@ library(plotly)
 # User interface ----
 ui <- fluidPage(
 
+      fluidRow(
+        column(3,""),
+        column(3,
             selectInput("userInput_ano",
                          label = "Escolha o ano",
                          choices = list("2019", 
@@ -13,7 +16,9 @@ ui <- fluidPage(
                                         "2017" 
                          ),
                          selected = "2019"
-             ),
+             )
+        ),
+        column(3,
              selectInput("userInput_produto", 
                          label = "Escolha o Produto",
                          choices = list("ETANOL HIDRATADO",
@@ -21,7 +26,12 @@ ui <- fluidPage(
                                         "ÓLEO DIESEL"
                          ),
                          selected = "GASOLINA COMUM"
-             ),
+             )
+        )
+        
+      ),
+      fluidRow(
+        column(10, offset=1,
             checkboxGroupInput("userInput_estado", "Estados",
                                c("ACRE",
                                  "ALAGOAS",
@@ -51,9 +61,14 @@ ui <- fluidPage(
                                  "SERGIPE",
                                  "TOCANTINS"
                                ),
-              selected=c('RIO GRANDE DO SUL', 'SAO PAULO', 'MATO GROSSO', 'BAHIA', 'AMAZONAS')),
+              selected=c('RIO GRANDE DO SUL', 'SAO PAULO', 'MATO GROSSO', 'BAHIA', 'AMAZONAS'),
+              inline = TRUE)
+        )
+      ),
+      
+      htmlOutput("newline"),
             
-              plotlyOutput('plot')
+      plotlyOutput('plot')
               
       )
 
@@ -61,7 +76,13 @@ ui <- fluidPage(
 # Server logic
 
 server <- function(input, output) {
-  df <- read.csv('data/2004-2019.tsv', sep='\t')
+  
+  output$newline<- renderUI({
+    HTML("<br/><br/>")
+  })
+  
+  
+  df <- read.csv('../data/2004-2019.tsv', sep='\t')
   meses_code <- c('Janeiro' = 1, 
                   'Fevereiro' = 2, 
                   'Março' = 3, 
@@ -91,7 +112,7 @@ server <- function(input, output) {
                              labels = names(meses_code)[match(d$MÊS, meses_code)], 
                              breaks = d$MÊS) + 
           ylim(c(2, 5.6)) + 
-          labs(title="Histórico de Preços", y="Preço (em valores absolutos)") + 
+          labs(title="Histórico de Preços por Estado", y="Preço (em valores absolutos)") + 
           geom_point(aes(text=sprintf("%s<br>Preço: R$%.3f<br>Mês: %s", d$ESTADO, d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
           
 
