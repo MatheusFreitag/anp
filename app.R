@@ -22,39 +22,39 @@ ui <- fluidPage(
                          ),
                          selected = "GASOLINA COMUM"
              ),
-             selectInput("userInput_estado", 
-                         label = "Escolha o Estado",
-                         choices = list("ACRE",
-                                        "ALAGOAS",
-                                        "AMAPÁ" = "AMAPA",
-                                        "AMAZONAS",
-                                        "BAHIA",
-                                        "CEARÁ" = "CEARA" ,
-                                        "DISTRITO FEDERAL",
-                                        "ESPÍRITO SANTO" = "ESPIRITO SANTO",
-                                        "GOIÁS" = "GOIAS",
-                                        "MARANHÃO" = "MARANHAO",
-                                        "MATO GROSSO",
-                                        "MATO GROSSO DO SUL",
-                                        "MINAS GERAIS",
-                                        "PARÁ" = "PARA",
-                                        "PARAÍBA" = "PARAIBA",
-                                        "PARANÁ" = "PARANA",
-                                        "PERNAMBUCO",
-                                        "PIAUÍ" = "PIAUI",
-                                        "RIO DE JANEIRO",
-                                        "RIO GRANDE DO NORTE", 
-                                        "RIO GRANDE DO SUL",
-                                        "RONDÔNIA" = "RONDONIA",
-                                        "RORÂIMA" = "RORAIMA",
-                                        "SANTA CATARINA",
-                                        "SÃO PAULO" = "SAO PAULO",
-                                        "SERGIPE",
-                                        "TOCANTINS"
-                         ),
-                         selected = "ACRE"
-             ),
+            checkboxGroupInput("userInput_estado", "Estados",
+                               c("ACRE",
+                                 "ALAGOAS",
+                                 "AMAPÁ" = "AMAPA",
+                                 "AMAZONAS",
+                                 "BAHIA",
+                                 "CEARÁ" = "CEARA" ,
+                                 "DISTRITO FEDERAL",
+                                 "ESPÍRITO SANTO" = "ESPIRITO SANTO",
+                                 "GOIÁS" = "GOIAS",
+                                 "MARANHÃO" = "MARANHAO",
+                                 "MATO GROSSO",
+                                 "MATO GROSSO DO SUL",
+                                 "MINAS GERAIS",
+                                 "PARÁ" = "PARA",
+                                 "PARAÍBA" = "PARAIBA",
+                                 "PARANÁ" = "PARANA",
+                                 "PERNAMBUCO",
+                                 "PIAUÍ" = "PIAUI",
+                                 "RIO DE JANEIRO",
+                                 "RIO GRANDE DO NORTE", 
+                                 "RIO GRANDE DO SUL",
+                                 "RONDÔNIA" = "RONDONIA",
+                                 "RORÂIMA" = "RORAIMA",
+                                 "SANTA CATARINA",
+                                 "SÃO PAULO" = "SAO PAULO",
+                                 "SERGIPE",
+                                 "TOCANTINS"
+                               ),
+              selected=c('RIO GRANDE DO SUL', 'SAO PAULO', 'MATO GROSSO', 'BAHIA', 'AMAZONAS')),
+            
               plotlyOutput('plot')
+              
       )
 
 
@@ -75,23 +75,24 @@ server <- function(input, output) {
                   'Novembro' = 11, 
                   'Dezembro' = 12)
   
+  output$estados <- renderText({input$userInput_estado2})
   
   output$plot <- renderPlotly({
     
     d <- df[df$ANO == input$userInput_ano & 
               df$PRODUTO == input$userInput_produto &
-              df$ESTADO == input$userInput_estado, ]
+              df$ESTADO %in% input$userInput_estado, ]
     
-    d <- aggregate(d$PREÇO.MÉDIO.REVENDA, by=list(MÊS = d$MÊS), mean)
+    d <- aggregate(d$PREÇO.MÉDIO.REVENDA, by=list(MÊS = d$MÊS, ESTADOS=d$ESTADO), mean)
     
-    g <- ggplot(d, aes(x=MÊS, y=x)) +
+    g <- ggplot(d, aes(x=MÊS, y=x, group = ESTADOS, colour = ESTADOS)) +
           geom_line() +
           scale_x_continuous(paste("Meses observados de ", input$userInput_ano), 
                              labels = names(meses_code)[match(d$MÊS, meses_code)], 
                              breaks = d$MÊS) + 
           ylim(c(2, 5.6)) + 
           labs(title="Histórico de Preços", y="Preço (em valores absolutos)") + 
-          geom_point(aes(text=sprintf("Preço: R$%.3f<br>Mês: %s", d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
+          geom_point(aes(text=sprintf("%s<br>Preço: R$%.3f<br>Mês: %s", d$ESTADO, d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
           
 
     gg <- ggplotly(g, tooltip="text")
