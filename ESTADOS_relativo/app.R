@@ -82,18 +82,8 @@ server <- function(input, output) {
   })
   
   df <- read.csv('../data/2004-2019.tsv', sep='\t')
-  meses_code <- c('Janeiro' = 1, 
-                  'Fevereiro' = 2, 
-                  'Março' = 3, 
-                  'Abril' = 4, 
-                  'Maio' = 5, 
-                  'Junho' = 6, 
-                  'Julho' = 7, 
-                  'Agosto' = 8, 
-                  'Setembro' = 9, 
-                  'Outubro' = 10, 
-                  'Novembro' = 11, 
-                  'Dezembro' = 12)
+  meses_code <- c('Inicio do ano' = 1, 
+                  'Fim do ano' = 2)
   
   output$estados <- renderText({input$userInput_estado2})
   
@@ -108,37 +98,25 @@ server <- function(input, output) {
     
     d_final <- data.frame()
     
-    for (cada_estado in unique(crescimento_relativo$ESTADO)){
-      d_r <- crescimento_relativo[crescimento_relativo$ESTADO == cada_estado, ]
-      
-      x <- d_r$x
-      taxa_de_crescimento <- c(0)
-      i <- 1
-      for (value in x){
-        if (i != 1){
-          taxa = taxa_de_crescimento[i-1] + ((x[i] - x[i-1]) / x[i] * 100)
-          taxa_de_crescimento = c(taxa_de_crescimento, taxa)
-        }
-        i <- i+1
-      }
-      
-      d_r$x <- taxa_de_crescimento
-      
-      d_final <- rbind(d_final, d_r)
+    for (cada_regiao in unique(crescimento_relativo$ESTADO)){
+      d_r <- crescimento_relativo[crescimento_relativo$ESTADO == cada_regiao, ]
+      d_final <- rbind(d_final, data.frame('MÊS' = 1, 'ESTADO' = cada_regiao, 'TAXA'= 0))
+      taxa = (tail(d_r, 1)$x - head(d_r, 1)$x) / head(d_r, 1)$x * 100
+      d_final <- rbind(d_final, data.frame('MÊS' = 2, 'ESTADO' = cada_regiao, 'TAXA'=  taxa))
     }
     
     d <- d_final
     
-    g <- ggplot(d, aes(x=MÊS, y=x, group = ESTADO, colour = ESTADO)) +
-          geom_line() +
-          scale_x_continuous(paste("Meses observados de ", input$userInput_ano), 
-                             labels = names(meses_code)[match(d$MÊS, meses_code)], 
-                             breaks = d$MÊS) + 
-          ylim(c(-20, 20)) + 
-          labs(title="Histórico de alteração acumulada relativa de preços por Estado", y="Crescimento (valores relativos acumulados)") + 
-          geom_point(aes(text=sprintf("%s<br>Crescimento: %f%s<br>Mês: %s", d$ESTADO, d$x, '%', names(meses_code)[match(d$MÊS, meses_code)] ))) 
-          
-
+    g <- ggplot(d, aes(x=MÊS, y=TAXA, group = ESTADO, colour = ESTADO)) +
+      geom_line() +
+      scale_x_continuous(paste("Meses observados de ", input$userInput_ano), 
+                         labels = names(meses_code)[match(d$MÊS, meses_code)], 
+                         breaks = d$MÊS) + 
+      ylim(c(-20, 20)) + 
+      labs(title="Histórico de alteração acumulada relativa de preços por Região", y="Crescimento (valores relativos acumulados)") + 
+      geom_point(aes(text=sprintf("%s<br>Crescimento: %f%s<br>Mês: %s", d$ESTADO, d$TAXA, '%', names(meses_code)[match(d$MÊS, meses_code)] ))) 
+    
+    
     gg <- ggplotly(g, tooltip="text")
     
     (gg)
