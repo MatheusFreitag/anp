@@ -112,8 +112,8 @@ server <- function(input, output) {
                              labels = names(meses_code)[match(d$MÊS, meses_code)], 
                              breaks = d$MÊS) + 
           ylim(c(2, 5.6)) + 
-          labs(title="Histórico de Preços por Estado", y="Preço (em valores absolutos)") + 
-          geom_point(aes(text=sprintf("%s<br>Preço: R$%.3f<br>Mês: %s", d$ESTADO, d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
+          labs(title=sprintf("Histórico de Preços Médios (%s) por Estado", input$userInput_produto), y="Preço (em valores absolutos)") + 
+          geom_point(aes(text=sprintf("%s<br>%s<br>Preço Médio: R$ %.3f<br>Mês: %s", d$ESTADO, input$userInput_produto, d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
           
 
     gg <- ggplotly(g, tooltip="text")

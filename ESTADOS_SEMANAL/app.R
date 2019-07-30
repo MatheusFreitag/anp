@@ -126,8 +126,8 @@ server <- function(input, output) {
                              labels = names(meses_code)[match(d$MÊS, meses_code)], 
                              breaks = d$MÊS) + 
           ylim(c(3, 5.6)) + 
-          labs(title="Preço médio semanal por mês de 2019", y="Preço (em valores absolutos)") + 
-          geom_point(aes(text=sprintf("%s<br>Preço: R$%.3f<br>Mês: %s<br>SEMANA: %sª do mês", d$ESTADO, d$PREÇO.MÉDIO.REVENDA, names(meses_code)[match(d$MÊS, meses_code)], d$SEMANA ))) 
+          labs(title=sprintf("Preço médio semanal (%s) por mês de 2019",  input$userInput_produto ), y="Preço (em valores absolutos)") + 
+          geom_point(aes(text=sprintf("%s<br>Preço Médio : R$%.3f<br>Mês: %s<br>SEMANA: %sª do mês", d$ESTADO, d$PREÇO.MÉDIO.REVENDA, names(meses_code)[match(d$MÊS, meses_code)], d$SEMANA ))) 
           
 
     gg <- ggplotly(g, tooltip="text")

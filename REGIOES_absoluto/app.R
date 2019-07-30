@@ -10,7 +10,7 @@ ui <- fluidPage(
         column(3,""),
         column(3,
             selectInput("userInput_ano",
-                         label = "Escolha o ano",
+                         label = "Escolha o Ano",
                          choices = list("2019", 
                                         "2018",
                                         "2017" 
@@ -32,7 +32,7 @@ ui <- fluidPage(
       ),
       fluidRow(
         column(10, offset=1,
-            checkboxGroupInput("userInput_regiao", "Regiões",
+            checkboxGroupInput("userInput_regiao", "Escolha as Regiões",
                                c("SUL",
                                  "SUDESTE",
                                  "CENTRO OESTE",
@@ -88,8 +88,8 @@ server <- function(input, output) {
                              labels = names(meses_code)[match(d$MÊS, meses_code)], 
                              breaks = d$MÊS) + 
           ylim(c(2, 5.6)) + 
-          labs(title="Histórico de Preços por Região", y="Preço (em valores absolutos)") + 
-          geom_point(aes(text=sprintf("%s<br>Preço: R$%.3f<br>Mês: %s", d$REGIÃO, d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
+          labs(title=sprintf("Histórico de Preços Médios (%s) por Região", input$userInput_produto), y="Preço (em valores absolutos)") + 
+          geom_point(aes(text=sprintf("%s<br>Preço Médio: R$ %.3f<br>Mês: %s", d$REGIÃO, d$x, names(meses_code)[match(d$MÊS, meses_code)] ))) 
           
 
     gg <- ggplotly(g, tooltip="text")

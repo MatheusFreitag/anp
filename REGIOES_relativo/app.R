@@ -90,8 +90,8 @@ server <- function(input, output) {
                          labels = names(meses_code)[match(d$MÊS, meses_code)], 
                          breaks = d$MÊS) + 
       ylim(c(-20, 20)) + 
-      labs(title="Histórico de alteração acumulada relativa de preços por Região", y="Crescimento (valores relativos acumulados)") + 
-      geom_point(aes(text=sprintf("%s<br>Crescimento: %f%s<br>Mês: %s", d$REGIÃO, d$TAXA, '%', names(meses_code)[match(d$MÊS, meses_code)] ))) 
+      labs(title=sprintf("Crescimento acumulado de preços (%s) por Região", input$userInput_produto), y="Crescimento (valores relativos)") + 
+      geom_point(aes(text=sprintf("REGIÃO %s<br>%s<br>Crescimento: %.3f%s<br>Período: %s", d$REGIÃO,input$userInput_produto ,d$TAXA, '%', names(meses_code)[match(d$MÊS, meses_code)] ))) 
     
     
     gg <- ggplotly(g, tooltip="text")

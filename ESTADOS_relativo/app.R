@@ -10,7 +10,7 @@ ui <- fluidPage(
         column(3,""),
         column(3,
             selectInput("userInput_ano",
-                         label = "Escolha o ano",
+                         label = "Escolha o Ano",
                          choices = list("2019", 
                                         "2018",
                                         "2017" 
@@ -32,7 +32,7 @@ ui <- fluidPage(
       ),
       fluidRow(
         column(10, offset=1,
-            checkboxGroupInput("userInput_estado", "Estados",
+            checkboxGroupInput("userInput_estado", "Escolha os Estados",
                                c("ACRE",
                                  "ALAGOAS",
                                  "AMAPÁ" = "AMAPA",
@@ -113,8 +113,8 @@ server <- function(input, output) {
                          labels = names(meses_code)[match(d$MÊS, meses_code)], 
                          breaks = d$MÊS) + 
       ylim(c(-20, 20)) + 
-      labs(title="Histórico de alteração acumulada relativa de preços por Região", y="Crescimento (valores relativos acumulados)") + 
-      geom_point(aes(text=sprintf("%s<br>Crescimento: %f%s<br>Mês: %s", d$ESTADO, d$TAXA, '%', names(meses_code)[match(d$MÊS, meses_code)] ))) 
+      labs(title=sprintf("Crescimento acumulado de preços (%s) por Estado", input$userInput_produto), y="Crescimento (valores relativos)") + 
+      geom_point(aes(text=sprintf("%s<br>%s<br>Crescimento: %.3f%s<br>Período: %s", d$ESTADO, input$userInput_produto,d$TAXA, '%', names(meses_code)[match(d$MÊS, meses_code)] ))) 
     
     
     gg <- ggplotly(g, tooltip="text")
