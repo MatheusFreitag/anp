@@ -12,7 +12,7 @@ Os dados foram obtidos no site oficial da [Agência Nacional do Petróleo, Gás 
 e estão disponíveis de forma tabular e padronizada no [Kaggle](https://www.kaggle.com/matheusfreitag/gas-prices-in-brazil).
 
 ## Desenvolvimento
-O projeto foi desenvolvido em R, particularmente com o framework [Shiny](https://shiny.rstudio.com/) e [R Markdown](https://rmarkdown.rstudio.com/) para gerar p painel. 
+O projeto foi desenvolvido em R, particularmente com o framework [Shiny](https://shiny.rstudio.com/) e [R Markdown](https://rmarkdown.rstudio.com/) para gerar o painel. 
 
 ## Resultados
 Os resultados finais podem ser visualizados nos gráficos interativos [disponíveis aqui](https://matheusfreitag.shinyapps.io/anp-historico/).
