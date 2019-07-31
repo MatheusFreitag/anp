@@ -1,35 +1,105 @@
 ---
-title: "index"
+title: "Análise do preço de combustíveis no Brasil 🇧🇷"
 runtime: shiny
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+---
+## 1. Introdução
+A Agência Nacional do Petróleo, Gás Natural e Biocombustíveis (ANP) disponibiliza em seu site oficial o levantamento histórico do preço de diversos combustíveis e demais derivados de petróleo no país.
+Neste projeto, irei analisar como se comportaram os preços de alguns produtos que a ANP monitora, desde 2017 até Junho de 2019, e verificar como diferentes regiões do Brasil, e seus respectivos estados, viram o preço desses produtos mudar ao longo dos últimos anos.
 
-This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
+Os produtos que serão analisados são **Gasolina Comum**, **Etanol Hidratado** e **Óleo Diesel**.
 
-To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+<br>
 
+## 2. Preços absolutos 💰
+No Brasil todos os produtos analisados aqui possuem um preço mensurado em Real/Litro, mas o valor bruto pago por consumidores 
+difere dependendo da região e o estado onde se encontram.
 
-## Embedded Application
+### 2.1 Regiões
+Nas cinco macrorerigões do país, o preço dos combustíveis, em média, sofrem as mesmas flutuações, mas em 2019, para a **Gasolina Comum**, a Região Sudeste apresentou os preços mais caros, enquanto a região Sul e Centro-Oeste registraram os mais baixos.
+Já para o **Etanol Hidratado**, a região Norte apresentou os preços mais altos, com o Centro-Oeste registrando os preços mais baixos.
+O Norte ainda mantém o posto de região mais cara para o **Óleo Diesel** em 2019, e o mais barato é encontrado na região Sul.
+Você pode verificar essas informações, e em diferentes anos, no gráfico interativo abaixo.
 
-It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+**Nota:** É importante salientar que os preços apresentados são as médias de preços analisados na região. É possível que municipios individuais tenham registrado preços mais altos ou mais baixos que as médias de suas respectivas regiões, mas esses valores são amortizados com o de outros municípios da mesma região. O mesmo vale para as análises estaduais, logo a seguir.
 
-```{r tabsets, echo=FALSE}
-shinyAppDir('ESTADOS_absoluto',
+<br><br>
+```{r REGIOES_absoluto, echo=FALSE}
+shinyAppDir('REGIOES_absoluto',
   options = list(
-    width = "100%", height = 800
+    width = "100%", height = 700
   )
 )
 ```
 
-Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+### 2.2 Estados
+Dentro das macroregiões do país, os diferentes estados se comportam de maneiras semelhantes quanto a flutuação dos preços, mas registrando preços brutos diferentes entre si. Em 2019, na região Nordeste, por exemplo, a Paraíba registrou até Maio o preço mais baixo da **Gasolina Comum**, sendo superada em Junho pelo Sergipe. O posto de preço mais alto na região foi alternando ao longo do ano, e em Junho ficou com o estado de Alagoas.
+Já na região Sul as flutuações entre os estados se manteve constante em 2019 para a Gasolina Comum, com o Rio Grande do Sul apresentando consistentemente os preços mais altos do combustível, e Santa Catarina, os mais baixos.
+Essas informações, o comparativo de outros estados e outros anos podem ser visualizadas no gráfico interativo abaixo.
+<br><br>
 
-You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+```{r ESTADOS_absoluto, echo=FALSE}
+shinyAppDir('ESTADOS_absoluto',
+  options = list(
+    width = "100%", height = 700
+  )
+)
+```
 
-In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+## 3. Preços relativos 📈 
+Diversos fatores contribuem para o valor final dos produtos aqui estudados, como a infraestrutura de transporte, o quão remotas as regiões são, o poder de compra dos consumidores, entre outros. Sendo assim, vamos comparar as mudanças de preço em termos relativos, isto é, comparando os preços observados no início do ano e ao final do ano, o quanto este preço se alterou? 
 
+**Nota:** Para 2019, esta análise é feita de Janeiro a Junho, pois (logicamente) não há ainda dados sobre os preços dos combustíveis para o fim do ano. Este painel será atualizado de acordo.
 
+### 3.1 Regiões
+A Região Norte foi a que mais viu os seus preços aumentarem em 2019 para a **Gasolina Comum**, com um aumento médio de 7% se comparado ao preço do início do ano. Já para o **Etanol**, foi o Nordeste que mais viu os preços aumentarem neste ano.
+Para o **Óleo Diesel**, os preços tiveram mais aumento na Região Sul do país.
+Todas as regiões observaram aumento de preços durante 2019. Estas, e outras observações, podem ser conferidas no gráfico interativo abaixo.
+<br><br>
+```{r REGIOES_relativo, echo=FALSE}
+shinyAppDir('REGIOES_relativo',
+  options = list(
+    width = "100%", height = 700
+  )
+)
+```
+
+### 3.2 Estados
+Analisando individualmente os estados do Sudeste, Minas Gerais foi o estado que mais viu o preço da **Gasolina Comum** subir em 2019, com um aumento médio de 4.42% no valor atual comparado aos valores encontrados no início do ano. Já nos estados do Norte, o Amazonas foi o estado que mais viu os preços da Gasolina Comum aumentarem esse ano, e por margem considerável em relação aos outros estados da região.
+<br><br>
+
+```{r ESTADOS_relativo, echo=FALSE}
+shinyAppDir('ESTADOS_relativo',
+  options = list(
+    width = "100%", height = 700
+  )
+)
+```
+
+## 4. Analise Semanal ⏳
+**Quando é mais barato comprar combustível?**<br>
+Analisando o ano de 2019, a pergunta acima se modifica dependendo do estado do consumidor. 
+Se você estiver no Rio Grande do Sul, em média a 2ª e 3ª semana do mês costumam ser as mais baratas, e a última semana do mês, mais cara. Já se você estiver no Distrito Federal, a 1ª semana costuma ser a mais barata, e a 2ª a mais cara - mas só se for a Gasolina Comum, porque se você estiver atrás de Etanol, essas semanas concentram os preços mais caros em média.
+
+Essas e outras análises podem ser observadas abaixo
+
+**Entendendo o gráfico:** A linha superior do gráfico abaixo mostra as médias de preço de cada semana - considerando todo o ano de 2019. Para verificar as médias semanais de cada mês olhe mais abaixo no gráfico de linhas apresentado.
+
+<br><br>
+
+```{r ESTADOS_SEMANAL, echo=FALSE}
+shinyAppDir('ESTADOS_SEMANAL',
+  options = list(
+    width = "100%", height = 700
+  )
+)
+```
+
+___
+Projeto desenvolvido por [Matheus Freitag](https://matheusfreitag.me/).<br>
+Os dados foram coletados do [site oficial](https://www.anp.gov.br/) da ANP, e estão disponbilizados de forma unificada na minha [página do Kaggle](https://www.kaggle.com/matheusfreitag/gas-prices-in-brazil).<br>
+O código fonte deste painel pode ser encontrado no [GitHub](https://github.com/MatheusFreitag/anp).<br>
+Desenvolvido usando [Shiny](https://shiny.rstudio.com/) e [R Markdown](https://rmarkdown.rstudio.com/).
 

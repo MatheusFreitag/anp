@@ -81,7 +81,7 @@ server <- function(input, output) {
     HTML("<br/><br/>")
   })
   
-  df <- read.csv('../data/2004-2019.tsv', sep='\t')
+  df <- read.csv('./data/2004-2019.tsv', sep='\t')
   meses_code <- c('Inicio do ano' = 1, 
                   'Fim do ano' = 2)
   

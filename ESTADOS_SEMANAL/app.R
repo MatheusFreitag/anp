@@ -77,7 +77,7 @@ server <- function(input, output) {
   })
   
   
-  df <- read.csv('../data/2004-2019.tsv', sep='\t')
+  df <- read.csv('./data/2004-2019.tsv', sep='\t')
   meses_code <- c('Janeiro' = 1, 
                   'Fevereiro' = 2, 
                   'Março' = 3, 
